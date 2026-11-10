@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css">
 
 <head>
     <style type="text/css">
@@ -504,6 +507,134 @@
     </table>
 
 
+<script>
+    /*Vieux code 
+let clickElements = [];
+let elements = document.getElementsByTagName("tr");
+let selectionText = document.getElementById("selection");
+
+for(let i = 0;i<elements.length;i++){
+    let element = elements[i];
+     element.addEventListener("mouseover",function(){ this.style.border = "1px solid #888";});
+    element.addEventListener("mouseout",function(){this.style.border = "";});
+    element.addEventListener("click", function(event){
+        let target = this;
+        let targetIndex = clickElements.indexOf(target);
+        function changeStyle(element, backgroundColor, fontWeight, border){
+            if(backgroundColor !== null){
+            element.style.backgroundColor = backgroundColor;
+            }
+            if(fontWeight !== null){
+            element.style.fontWeight = fontWeight;
+            }
+            if(border !== null){
+            element.style.border = border;
+        }
+    }
+         function compteur(clickElements,selectionText) {
+            if(clickElements.length > 1){ selectionText.innerText = clickElements.length+" éléments sélectionnés";}   
+            else{ selectionText.innerText = clickElements.length+" élément sélectionné";}
+        }
+
+        if(targetIndex === -1){
+            changeStyle(target,"lightblue",900,null)
+            clickElements.push(target);
+            compteur(clickElements,selectionText)
+        }
+        else{
+            changeStyle(target,"white",500,null)
+            target.style.backgroundColor="white";
+            target.style.fontWeight = "500";
+            clickElements.splice(targetIndex,1);
+            compteur(clickElements,selectionText)
+        }
+       
+    });
+}*/
+/* version pas adapté
+$('table').DataTable();
+function refreshSelectionText(count){
+        if(count > 1)
+            $("#selection").text(count + " éléments sélectionnés");
+        else 
+            $("#selection").text(count + " élément sélectionné");        
+    }
+        
+    function changeStyle(element, backgroundColor, fontWeight, border){
+        if(backgroundColor!== null){
+            $(element).css("background-color", backgroundColor);
+        }
+        if(fontWeight !== null){
+            $(element).css("font-weight", fontWeight);
+        }
+        if(border !== null){
+            $(element).css("border", border);
+        }
+    }
+
+    let clickElements = [];
+     
+    $("tr").on("click",function(){
+        let target = this;
+        let targetIndex = clickElements.indexOf(target);
+        if(targetIndex === -1){
+            changeStyle(target, "lightblue", "900", null);
+            clickElements.push(target);
+            refreshSelectionText(clickElements.length);
+        }
+        else{
+            changeStyle(target, "white", "500", null);
+            clickElements.splice(targetIndex,1);
+            refreshSelectionText(clickElements.length);
+        }
+    }).on("mouseover", function(){
+        changeStyle(this, null, null, "1px solid #888");
+    }).on("mouseout", function(){
+        changeStyle(this, null, null, "");       
+    });        
+    const table = new DataTable('#example') // Crée la datatable version Js
+
+    function refreshSelectionText(count){ // Notre fct qui compte le nombre de lignes sélectionnées
+    if(count > 1)
+        $("#selection").text(count+" éléments sélectionnés");
+    else 
+        $("#selection").text(count+" élément sélectionné");  
+    }
+    // On crée l'événement click sur les tr de la table. Le paramètre e est event.
+    // On ajoute la classe selected sur l’élément tr sélectionné avec toggle qui ajoute une classe si 
+    // elle n'existe pas ou la retire si elle existe . 
+    // Ensuite on appel notre fonction refreshSelectionText. table.rows('.selected').data() va 
+    // retourner un tableau des lignes sélectionnées et ensuite on utilise .length pour calculer
+    // le nombre de lignes sélectionnées.
+    table.on('click', 'tbody tr', function (e) {
+        e.currentTarget.classList.toggle('selected');
+        refreshSelectionText(table.rows('.selected').data().length);; 
+        
+    });
+    *//*version jQuery*/
+function refreshSelectionText(count){
+    if(count > 1)
+        $("#selection").text(count+" éléments sélectionnés");
+    else 
+        $("#selection").text(count+" élément sélectionné");  
+}
+
+let table = $('table').DataTable({
+    "language": {
+        "lengthMenu": "Affichage de _MENU_ enregistrements par page",
+        "zeroRecords": "Rien trouvé… Désolé! ",
+        "info": "Affichage de la page _PAGE_ de _PAGES_",
+        "infoEmpty": "Aucun enregistrement disponible ",
+        "infoFiltered": "(filtré à partir d’un maximum de _MAX_ enregistrement)" ,
+        "search":"Recherche: "
+    }
+});
+
+$('table tbody').on( 'click', 'tr',  function () {
+    $(this).toggleClass('selected');
+    refreshSelectionText(table.rows('.selected').data().length);
+} );
+</script>
 
 </body>
 
